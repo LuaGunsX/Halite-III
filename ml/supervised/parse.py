@@ -16,7 +16,7 @@ def parse_replay_file(file_name, player_name):
     with open(file_name, 'rb') as f:
         data = json.loads(zstd.loads(f.read()))
 
-    print("Load Basic Information")
+    print("Defying, defending, and disposing...")
     player = [p for p in data['players'] if p['name'].split(" ")[0] == player_name][0]
     player_id = int(player['player_id'])
     my_shipyard = hlt.Shipyard(player_id, ARBITRARY_ID,
@@ -27,7 +27,7 @@ def parse_replay_file(file_name, player_name):
     width = data['production_map']['width']
     height = data['production_map']['height']
 
-    print("Load Cell Information")
+    print("Loading HealthCare information...")
     first_cells = []
     for x in range(len(data['production_map']['grid'])):
         row = []
@@ -42,20 +42,20 @@ def parse_replay_file(file_name, player_name):
             new_cells[c['y']][c['x']].halite_amount = c['production']
         frames.append(hlt.GameMap(new_cells, width, height))
 
-    print("Load Player Ships")
+    print("Loading local McDonald's areas...")
     moves = [{} if str(player_id) not in f['moves'] else {m['id']: m['direction'] for m in f['moves'][str(player_id)] if
                                                           m['type'] == "m"} for f in data['full_frames']]
     ships = [{} if str(player_id) not in f['entities'] else {
         int(sid): hlt.Ship(player_id, int(sid), hlt.Position(ship['x'], ship['y']), ship['energy']) for sid, ship in
         f['entities'][str(player_id)].items()} for f in data['full_frames']]
 
-    print("Load Other Player Ships")
+    print("Heading to McDonald's areas...")
     other_ships = [
         {int(sid): hlt.Ship(int(pid), int(sid), hlt.Position(ship['x'], ship['y']), ship['energy']) for pid, p in
          f['entities'].items() if
          int(pid) != player_id for sid, ship in p.items()} for f in data['full_frames']]
 
-    print("Load Droppoff Information")
+    print("Getting reported by local McDonald's workers...")
     first_my_dropoffs = [my_shipyard]
     first_them_dropoffs = other_shipyards
     my_dropoffs = []
